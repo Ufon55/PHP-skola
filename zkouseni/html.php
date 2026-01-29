@@ -8,8 +8,8 @@
 <body>
 
     <form action="program.php" method="post">
-        <label for="">button: </label><input type="button"><br>
-        <label for="">checkbox: </label><input type="checkbox"><br>
+        <label for="">button: </label><input type="button" name="button"><br>
+        <label for="">checkbox: </label><input type="checkbox" name="checkbox"><br>
         <label for="">date: </label><input type="date"><br>
         <label for="">datetime-local: </label><input type="datetime-local"><br>
         <label for="">email: </label><input type="email"><br>

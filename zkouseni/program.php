@@ -1,5 +1,5 @@
 <?php
-    $checkbox = $_POST["checkbox"] ?? "off";
+    $checkbox = $_GET["checkbox"];
     $date = $_POST["date"];
     $datetime = $_POST["datetime"];
     $email = $_POST["email"];
