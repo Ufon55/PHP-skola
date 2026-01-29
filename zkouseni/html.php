@@ -8,8 +8,8 @@
 <body>
 
     <form action="program.php" method="post">
-        Name: <input type="text" name="name"><br>
-        Email: <input type="text" name="email"><br>
+        Name: <input type="text" name="name" id="name"><br>
+         Věk: <input type="number" name="age" id="age"><br>
         <input type="submit">
     </form>
     
