@@ -24,12 +24,12 @@
 
     // }
 
-    
-$Users = "localhost";
-$Username = "člověk";
+
+$Users = "mysql:host=localhost;dbname=testdb;charset=utf8";
+$Username = "Parek";
 $Password = "heslo";
-$Email = "clovek@clovek.cz";
-$dbname = "First";
+$Email = "student@email.cz";
+$dbname = "Users";
 
 try {
   $conn = new PDO("mysql:host=$servername;dbname=,$dbname", $username, $password);
