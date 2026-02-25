@@ -24,41 +24,56 @@
 
     // }
 
+  
+//-----------------------------------------------------------------------------------------------------------
 
-    $dsn = "mysql:host=localhost;dbname=test;charset=utf8";
-    $Username = "admin";
-    $Password = "admin";
+    // $dsn = "mysql:host=localhost;dbname=test;charset=utf8";
+    // $Username = "admin";
+    // $Password = "admin";
 
-    try {
-      $conn = new PDO($dsn, $Username, $Password);
-      // set the PDO error mode to exception
-      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      echo "Connected successfully";
-    } 
-    catch(PDOException $e) 
-    {
-      echo "Connection failed: " . $e->getMessage();
-    }
+    // try {
+    //   $conn = new PDO($dsn, $Username, $Password);
+    //   // set the PDO error mode to exception
+    //   $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    //   echo "Connected successfully";
+    // } 
+    // catch(PDOException $e) 
+    // {
+    //   echo "Connection failed: " . $e->getMessage();
+    // }
 
-    function get($table, $id) {
-      global $db;
+    // function get($table, $id) {
+    //   global $db;
 
-      $sql = "SELECT * FROM $table WHERE id = :id";
-      $stmt = $db->prepare($sql);
-      $stmt->execute(['id'=> $id]);
+    //   $sql = "SELECT * FROM $table WHERE id = :id";
+    //   $stmt = $db->prepare($sql);
+    //   $stmt->execute(['id'=> $id]);
 
-      return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
+    //   return $stmt->fetch(PDO::FETCH_ASSOC);
+    // }
 
-    function getAll($table) {
-      global $db;
+    // function getAll($table) {
+    //   global $db;
 
-      $sql = "SELECT * FROM $table";
-      $stmt = $db->prepare($sql);
-      $stmt->execute();
+    //   $sql = "SELECT * FROM $table";
+    //   $stmt = $db->prepare($sql);
+    //   $stmt->execute();
 
-      return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    //   return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    }
+    // }
+
+
+$Dsn = "mysql:host=localhost;dbname=test;charset=utf8";
+$Username = "admin";
+$Password = "admin";
+ 
+try {
+  $db = new PDO($Dsn, $Username, $Password);
+  $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  echo "Connected successfully";
+} catch(PDOException $e) {
+  echo "Connection failed: " . $e->getMessage();
+}
 
 ?>
