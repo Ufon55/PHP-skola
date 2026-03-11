@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stránka pro práci se soubory</title>
+</head>
+<body>
+
+    <h1>Stránka pro práci se soubory</h1>
+
+    <!-- Sekce pro vytvoření souboru -->
+    <h2>Vytvořit soubor</h2>
+    <textarea id="fileContent" rows="4" cols="50" placeholder="Zadejte obsah souboru..."></textarea><br><br>
+    <button onclick="createFile()">Vytvořit soubor</button><br><br>
+
+    <!-- Sekce pro nahrání souboru -->
+    <h2>Nahrát soubor</h2>
+    <input type="file" id="fileInput" onchange="readFile()"><br><br>
+
+    <!-- Sekce pro změnu názvu souboru -->
+    <h2>Změnit název souboru</h2>
+    <input type="text" id="newFileName" placeholder="Nový název souboru"><br><br>
+
+    <!-- Sekce pro změnu obsahu souboru -->
+    <h2>Změnit obsah souboru</h2>
+    <textarea id="newFileContent" rows="4" cols="50" placeholder="Upravte obsah souboru..."></textarea><br><br>
+    <button onclick="saveFile()">Uložit změny</button><br><br>
+
+    <script>
+        let currentFileName = "novy_soubor.txt"; // Výchozí název souboru
+        let currentFileContent = ""; // Aktuální obsah souboru
+
+        // Vytvoření souboru z obsahu textarea
+        function createFile() {
+            const content = document.getElementById('fileContent').value;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = currentFileName;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Nahrání souboru a zobrazení jeho obsahu
+        function readFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentFileContent = e.target.result;
+                    document.getElementById('newFileContent').value = currentFileContent;
+                    currentFileName = file.name;
+                    document.getElementById('newFileName').value = currentFileName;
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // Uložení změn v souboru
+        function saveFile() {
+            // Získání nového názvu souboru z inputu
+            const newFileName = document.getElementById('newFileName').value.trim() || currentFileName;
+            const newContent = document.getElementById('newFileContent').value;
+
+            // Vytvoření souboru s novým obsahem a názvem
+            const blob = new Blob([newContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = newFileName;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            // Uložení nového názvu a obsahu pro případ dalších změn
+            currentFileName = newFileName;
+            currentFileContent = newContent;
+        }
+    </script>
+
+</body>
+</html>
