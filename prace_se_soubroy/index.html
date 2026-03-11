@@ -3,84 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stránka pro práci se soubory</title>
+    <title>Správa souborů</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        a {
+            margin: 0 5px;
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Stránka pro práci se soubory</h1>
+<h1>Správa souborů</h1>
 
-    <!-- Sekce pro vytvoření souboru -->
-    <h2>Vytvořit soubor</h2>
-    <textarea id="fileContent" rows="4" cols="50" placeholder="Zadejte obsah souboru..."></textarea><br><br>
-    <button onclick="createFile()">Vytvořit soubor</button><br><br>
+<!-- Zobrazení zprávy o operaci -->
+<?php if (isset($message)) { echo "<p>$message</p>"; } ?>
 
-    <!-- Sekce pro nahrání souboru -->
-    <h2>Nahrát soubor</h2>
-    <input type="file" id="fileInput" onchange="readFile()"><br><br>
+<!-- Sekce pro vytvoření souboru -->
+<h2>Vytvořit soubor</h2>
+<form method="POST" action="process.php">
+    <input type="text" name="fileName" placeholder="Název souboru" required><br><br>
+    <textarea name="fileContent" rows="4" cols="50" placeholder="Obsah souboru" required></textarea><br><br>
+    <button type="submit" name="createFile">Vytvořit soubor</button>
+</form>
 
-    <!-- Sekce pro změnu názvu souboru -->
-    <h2>Změnit název souboru</h2>
-    <input type="text" id="newFileName" placeholder="Nový název souboru"><br><br>
+<hr>
 
-    <!-- Sekce pro změnu obsahu souboru -->
-    <h2>Změnit obsah souboru</h2>
-    <textarea id="newFileContent" rows="4" cols="50" placeholder="Upravte obsah souboru..."></textarea><br><br>
-    <button onclick="saveFile()">Uložit změny</button><br><br>
+<!-- Sekce pro zobrazení seznamu souborů -->
+<h2>Seznam souborů</h2>
+<ul>
+    <?php
+    // Seznam souborů z PHP
+    foreach ($files as $file) {
+        echo "<li>$file 
+            <a href='process.php?readFile=$file' target='_blank'>Číst</a> | 
+            <a href='#' onclick=\"editFile('$file')\">Upravit</a> | 
+            <a href='#' onclick=\"deleteFile('$file')\">Smazat</a>
+            </li>";
+    }
+    ?>
+</ul>
 
-    <script>
-        let currentFileName = "novy_soubor.txt"; // Výchozí název souboru
-        let currentFileContent = ""; // Aktuální obsah souboru
+<!-- Sekce pro úpravu souboru -->
+<h2>Upravit soubor</h2>
+<form method="POST" id="editForm" style="display:none;" action="process.php">
+    <input type="text" name="fileName" id="editFileName" readonly><br><br>
+    <textarea name="fileContent" id="editFileContent" rows="4" cols="50" required></textarea><br><br>
+    <button type="submit" name="editFile">Upravit soubor</button>
+</form>
 
-        // Vytvoření souboru z obsahu textarea
-        function createFile() {
-            const content = document.getElementById('fileContent').value;
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = currentFileName;
-            a.click();
-            URL.revokeObjectURL(url);
+<!-- Sekce pro mazání souboru -->
+<script>
+    function editFile(fileName) {
+        fetch('uploads/' + fileName)
+            .then(response => response.text())
+            .then(content => {
+                document.getElementById('editFileName').value = fileName;
+                document.getElementById('editFileContent').value = content;
+                document.getElementById('editForm').style.display = 'block';
+            });
+    }
+
+    function deleteFile(fileName) {
+        if (confirm('Opravdu chcete tento soubor smazat?')) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'deleteFile';
+            input.value = fileName;
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
         }
-
-        // Nahrání souboru a zobrazení jeho obsahu
-        function readFile() {
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    currentFileContent = e.target.result;
-                    document.getElementById('newFileContent').value = currentFileContent;
-                    currentFileName = file.name;
-                    document.getElementById('newFileName').value = currentFileName;
-                };
-                reader.readAsText(file);
-            }
-        }
-
-        // Uložení změn v souboru
-        function saveFile() {
-            // Získání nového názvu souboru z inputu
-            const newFileName = document.getElementById('newFileName').value.trim() || currentFileName;
-            const newContent = document.getElementById('newFileContent').value;
-
-            // Vytvoření souboru s novým obsahem a názvem
-            const blob = new Blob([newContent], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = newFileName;
-            a.click();
-            URL.revokeObjectURL(url);
-
-            // Uložení nového názvu a obsahu pro případ dalších změn
-            currentFileName = newFileName;
-            currentFileContent = newContent;
-        }
-    </script>
+    }
+</script>
 
 </body>
 </html>

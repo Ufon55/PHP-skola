@@ -1,52 +1,74 @@
 <?php
-// Funkce pro vytvoření nového souboru
-if (isset($_POST['create_new_file'])) {
-    $newFileName = $_POST['new_file_name'];
-    $newFilePath = 'uploads/' . $newFileName;
-    if (!file_exists($newFilePath)) {
-        touch($newFilePath); // Vytvoří nový prázdný soubor
-        echo '<p>Nový soubor byl vytvořen: ' . $newFileName . '</p>';
+// Definujeme adresář pro ukládání souborů
+$uploadDir = "uploads/";
+
+if (!file_exists($uploadDir)) {
+    mkdir($uploadDir, 0777, true); // Vytvoříme adresář, pokud neexistuje
+}
+
+// Funkce pro vytvoření souboru
+if (isset($_POST['createFile'])) {
+    $fileName = $_POST['fileName'];
+    $content = $_POST['fileContent'];
+    if (!empty($fileName) && !empty($content)) {
+        // Používáme fopen() pro otevření souboru pro zápis
+        $file = fopen($uploadDir . $fileName, "w");
+        if ($file) {
+            fwrite($file, $content);
+            fclose($file);
+            $message = "Soubor '$fileName' byl vytvořen.<br>";
+        } else {
+            $message = "Chyba při vytváření souboru.<br>";
+        }
     } else {
-        echo '<p>Soubor již existuje.</p>';
+        $message = "Název souboru a obsah musí být vyplněny.<br>";
     }
 }
-// Funkce pro nahrání souboru
-if (isset($_POST['upload_file'])) {
-    $fileTmpName = $_FILES['file_upload']['tmp_name'];
-    $fileName = $_FILES['file_upload']['name'];
-    $uploadDir = 'uploads/';
-    // Pokud je složka pro nahrání neexistuje, vytvoříme ji
-    if (!file_exists($uploadDir)) {
-        mkdir($uploadDir, 0777, true);
-    }
-    // Uložení souboru
-    if (move_uploaded_file($fileTmpName, $uploadDir . $fileName)) {
-        echo '<p>Soubor byl úspěšně nahrán: ' . $fileName . '</p>';
-    } else {
-        echo '<p>Chyba při nahrávání souboru.</p>';
-    }
-}
-// Funkce pro otevření souboru
-if (isset($_POST['open_file'])) {
-    $fileName = $_POST['file_name'];
-    $filePath = 'uploads/' . $fileName;
+
+// Funkce pro čtení souboru
+if (isset($_GET['readFile'])) {
+    $fileName = $_GET['readFile'];
+    $filePath = $uploadDir . $fileName;
     if (file_exists($filePath)) {
-        $fileContent = file_get_contents($filePath);
-        echo '<p>Obsah souboru:</p>';
-        echo '<pre>' . htmlspecialchars($fileContent) . '</pre>';
+        // Používáme readfile() pro přečtení a zobrazení obsahu souboru
+        readfile($filePath);
+        exit;
     } else {
-        echo '<p>Soubor neexistuje.</p>';
+        $message = "Soubor neexistuje.<br>";
     }
 }
-// Funkce pro uložení změn do souboru
-if (isset($_POST['save'])) {
-    $fileName = $_POST['file_name'];
-    $content = $_POST['content'];
-    $filePath = 'uploads/' . $fileName;
-    if (file_put_contents($filePath, $content)) {
-        echo '<p>Změny byly úspěšně uloženy do souboru ' . $fileName . '</p>';
+
+// Funkce pro úpravu souboru
+if (isset($_POST['editFile'])) {
+    $fileName = $_POST['fileName'];
+    $newContent = $_POST['fileContent'];
+    if (!empty($fileName) && !empty($newContent)) {
+        // Používáme fopen() pro otevření souboru pro zápis
+        $file = fopen($uploadDir . $fileName, "w");
+        if ($file) {
+            fwrite($file, $newContent);
+            fclose($file);
+            $message = "Soubor '$fileName' byl upraven.<br>";
+        } else {
+            $message = "Chyba při úpravě souboru.<br>";
+        }
     } else {
-        echo '<p>Chyba při ukládání souboru.</p>';
+        $message = "Název souboru a nový obsah musí být vyplněny.<br>";
     }
 }
+
+// Funkce pro mazání souboru
+if (isset($_POST['deleteFile'])) {
+    $fileName = $_POST['deleteFile'];
+    $filePath = $uploadDir . $fileName;
+    if (file_exists($filePath)) {
+        unlink($filePath); // Používáme unlink() pro smazání souboru
+        $message = "Soubor '$fileName' byl smazán.<br>";
+    } else {
+        $message = "Soubor neexistuje.<br>";
+    }
+}
+
+// Seznam souborů v adresáři
+$files = array_diff(scandir($uploadDir), array('..', '.'));
 ?>
