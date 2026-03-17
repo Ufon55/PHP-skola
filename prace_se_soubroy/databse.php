@@ -1,16 +1,10 @@
 <?php
-// Adresář pro uložení souborů
-$uploadDir = "uploads/";
-
-// Pokud adresář neexistuje, vytvoříme ho
 if (!file_exists($uploadDir)) {
     mkdir($uploadDir, 0777, true);
 }
 
-// Zprávy
 $message = '';
 
-// Přidání souboru
 if (isset($_POST['createFile'])) {
     $fileName = $_POST['fileName'];
     $fileContent = $_POST['fileContent'];
