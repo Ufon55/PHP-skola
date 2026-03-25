@@ -1,10 +1,4 @@
 <?php
- 
-session_start();
-if (!isset($_SESSION['user_logged_in']) || $_SESSION['user_logged_in'] !== true) {
-    header("Location: login.php");  // Pokud není přihlášen, přesměrujeme na přihlašovací stránku
-    exit;
-}
 
 if (isset($_POST['open_file'])) {
     $fileName = $_POST['file_name'];
