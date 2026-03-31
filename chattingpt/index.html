@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulář pro zprávu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            margin: 10px 0 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Formulář pro odeslání zprávy</h2>
+
+    <form action="index.php" method="POST">
+
+        <!-- Jméno -->
+        <label for="fname">Jméno:</label>
+        <input type="text" id="fname" name="fname" placeholder="Zadejte své jméno" required>
+
+        <!-- Zpráva -->
+        <label for="message">Zpráva:</label>
+        <input type="text" id="message" name="message" placeholder="Napište zprávu..." required>
+
+        <!-- Tlačítko pro odeslání -->
+        <button type="submit">Odeslat</button>
+    </form>
+</div>
+
+</body>
+</html>
